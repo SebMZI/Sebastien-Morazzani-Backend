@@ -22,6 +22,9 @@ const projectSchema = new mongoose.Schema({
   stack: {
     type: [String],
   },
+  client: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Project", projectSchema);
