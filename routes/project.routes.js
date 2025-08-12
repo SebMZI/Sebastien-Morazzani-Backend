@@ -1,20 +1,12 @@
 const express = require("express");
+const { fetchProjects, fetchProjectById, createProject } = require("../controllers/project.controller");
 
 const projectRouter = express.Router();
 
-projectRouter.get("/", (req, res) => {
-  console.log("Fetching all projects");
-  res.send("All projects");
-});
+projectRouter.get("/", fetchProjects);
 
-projectRouter.get("/:id", (req, res) => {
-  console.log("Fetching project details");
-  res.send(`Project details for ID: ${req.params.id}`);
-});
+projectRouter.get("/:id", fetchProjectById);
 
-projectRouter.post("/", (req, res) => {
-  console.log("Creating a new project");
-  res.send("Project created");
-});
+projectRouter.post("/", createProject);
 
 module.exports = projectRouter;
