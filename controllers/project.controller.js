@@ -1,3 +1,6 @@
+const Project = require("../models/project.model");
+const mongoose = require("mongoose");
+
 const fetchProjects = (req, res, next) => {
   try {
   } catch (err) {
@@ -5,8 +8,26 @@ const fetchProjects = (req, res, next) => {
   }
 };
 
-const fetchProjectById = (req, res, next) => {
+const fetchProjectById = async (req, res, next) => {
   try {
+    const projectId = req.params.id;
+    if (!projectId) {
+      return res.status(400).json({ error: "Project ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).json({ error: "Project ID is invalid" });
+    }
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    return res.status(200).json({
+      message: "Project fetched successfully",
+      data: project,
+    });
   } catch (err) {
     next(err);
   }
