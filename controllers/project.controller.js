@@ -44,6 +44,29 @@ const fetchProjectById = async (req, res, next) => {
 
 const createProject = (req, res, next) => {
   try {
+    const {
+      projectName,
+      description,
+      year,
+      categories,
+      link,
+      images,
+      stack,
+      client,
+    } = req.body;
+
+    if (
+      !projectName ||
+      !description ||
+      !year ||
+      !categories ||
+      !link ||
+      !images ||
+      !stack ||
+      !client
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
   } catch (err) {
     next(err);
   }
