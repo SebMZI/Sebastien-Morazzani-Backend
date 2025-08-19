@@ -16,9 +16,12 @@ const projectSchema = new mongoose.Schema({
   link: {
     type: String,
   },
-  images: {
-    type: [String],
-  },
+  images: [
+    {
+      data: Buffer,
+      contentType: String,
+    },
+  ],
   stack: {
     type: [String],
   },
