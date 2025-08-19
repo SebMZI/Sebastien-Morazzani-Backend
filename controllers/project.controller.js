@@ -1,8 +1,17 @@
 const Project = require("../models/project.model");
 const mongoose = require("mongoose");
 
-const fetchProjects = (req, res, next) => {
+const fetchProjects = async (req, res, next) => {
   try {
+    const projects = await Project.find();
+    if (!projects || projects.length === 0) {
+      return res.status(404).json({ error: "No projects found" });
+    }
+
+    return res.status(200).json({
+      message: "Projects fetched successfully",
+      data: projects,
+    });
   } catch (err) {
     next(err);
   }
