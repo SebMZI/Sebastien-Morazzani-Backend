@@ -42,17 +42,16 @@ const fetchProjectById = async (req, res, next) => {
   }
 };
 
-const createProject = (req, res, next) => {
+const createProject = async (req, res, next) => {
   try {
     const {
       projectName,
       description,
       year,
       categories,
-      link,
-      images,
+      linkToProject,
       stack,
-      client,
+      clientName,
     } = req.body;
 
     if (
@@ -60,13 +59,39 @@ const createProject = (req, res, next) => {
       !description ||
       !year ||
       !categories ||
-      !link ||
-      !images ||
+      !linkToProject ||
       !stack ||
-      !client
+      !clientName
     ) {
       return res.status(400).json({ error: "All fields are required" });
     }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "At least one image is required" });
+    }
+
+    const images = req.files.map((file) => ({
+      data: file.buffer,
+      contentType: file.mimetype,
+    }));
+
+    const project = new Project({
+      project: projectName,
+      description,
+      year,
+      categorie: categories,
+      link: linkToProject,
+      images,
+      stack,
+      client: clientName,
+    });
+
+    await project.save();
+
+    res.status(201).json({
+      message: "Project successfully created",
+      data: project,
+    });
   } catch (err) {
     next(err);
   }
