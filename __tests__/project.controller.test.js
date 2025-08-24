@@ -3,6 +3,7 @@ import {
   fetchProjects,
   fetchProjectById,
   createProject,
+  deleteProject,
 } from "../controllers/project.controller";
 
 jest.mock("../models/project.model");
@@ -174,6 +175,73 @@ describe("create a project", () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       error: "At least one image is required",
+    });
+  });
+});
+
+describe("delete a project", () => {
+  let res;
+  let req;
+  let next;
+
+  beforeEach(() => {
+    req = {};
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    next = jest.fn();
+  });
+
+  it("throws an error if project id is missing", async () => {
+    req.params = {};
+
+    await deleteProject(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: "Project ID is required" });
+  });
+
+  it("throws an error if project id is invalid", async () => {
+    req.params = {
+      id: "10",
+    };
+
+    await deleteProject(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: "Project ID is invalid" });
+  });
+
+  it("throws an error if project is not found", async () => {
+    const req = { params: { id: "41224d776a326fb40f000001" } };
+
+    projectModel.findByIdAndDelete.mockResolvedValue(null);
+
+    await deleteProject(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "Project not found" });
+  });
+
+  it("should delete the project if found", async () => {
+    const fakeProject = {
+      name: "tst",
+      id: "41224d776a326fb40f000001",
+    };
+
+    req.params = {
+      id: "41224d776a326fb40f000001",
+    };
+
+    projectModel.findByIdAndDelete.mockResolvedValue(fakeProject);
+
+    await deleteProject(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Project successfully deleted",
+      data: fakeProject,
     });
   });
 });

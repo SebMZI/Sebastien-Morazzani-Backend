@@ -97,4 +97,29 @@ const createProject = async (req, res, next) => {
   }
 };
 
-export { fetchProjects, fetchProjectById, createProject };
+const deleteProject = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Project ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Project ID is invalid" });
+    }
+
+    const project = await projectModel.findByIdAndDelete(id);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    return res.status(200).json({
+      message: "Project successfully deleted",
+      data: project,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { fetchProjects, fetchProjectById, createProject, deleteProject };
