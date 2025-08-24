@@ -1,20 +1,21 @@
-const express = require("express");
-const multer = require("multer");
-const {
+import express from "express";
+import multer from "multer";
+import {
   fetchProjects,
   fetchProjectById,
   createProject,
-} = require("../controllers/project.controller");
+} from "../controllers/project.controller.js";
+import ajMw from "../middlewares/arcjet.middleware.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 const projectRouter = express.Router();
 
-projectRouter.get("/", fetchProjects);
+projectRouter.get("/", ajMw, fetchProjects);
 
 projectRouter.get("/:id", fetchProjectById);
 
 projectRouter.post("/", upload.array("images", 3), createProject);
 
-module.exports = projectRouter;
+export default projectRouter;

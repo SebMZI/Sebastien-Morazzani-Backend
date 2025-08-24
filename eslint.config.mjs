@@ -11,5 +11,5 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: { ...globals.node, ...globals.jest } },
   },
-  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
+  { files: ["**/*.js"], languageOptions: { sourceType: "module" } },
 ]);

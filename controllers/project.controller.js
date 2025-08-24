@@ -1,9 +1,9 @@
-const Project = require("../models/project.model");
-const mongoose = require("mongoose");
+import projectModel from "../models/project.model.js";
+import mongoose from "mongoose";
 
 const fetchProjects = async (req, res, next) => {
   try {
-    const projects = await Project.find();
+    const projects = await projectModel.find();
     if (!projects || projects.length === 0) {
       return res.status(404).json({ error: "No projects found" });
     }
@@ -28,7 +28,7 @@ const fetchProjectById = async (req, res, next) => {
       return res.status(400).json({ error: "Project ID is invalid" });
     }
 
-    const project = await Project.findById(projectId);
+    const project = await projectModel.findById(projectId);
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
@@ -75,11 +75,11 @@ const createProject = async (req, res, next) => {
       contentType: file.mimetype,
     }));
 
-    const project = new Project({
+    const project = new projectModel({
       project: projectName,
       description,
       year,
-      categorie: categories,
+      categories,
       link: linkToProject,
       images,
       stack,
@@ -97,8 +97,4 @@ const createProject = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  fetchProjects,
-  fetchProjectById,
-  createProject,
-};
+export { fetchProjects, fetchProjectById, createProject };

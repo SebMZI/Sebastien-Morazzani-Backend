@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema({
   project: {
@@ -10,7 +10,7 @@ const projectSchema = new mongoose.Schema({
   year: {
     type: Number,
   },
-  categorie: {
+  categories: {
     type: String,
   },
   link: {
@@ -30,4 +30,4 @@ const projectSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Project", projectSchema);
+export default mongoose.model("Project", projectSchema);

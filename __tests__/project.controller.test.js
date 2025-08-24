@@ -1,9 +1,9 @@
-const Project = require("../models/project.model");
-const {
+import projectModel from "../models/project.model";
+import {
   fetchProjects,
   fetchProjectById,
   createProject,
-} = require("../controllers/project.controller");
+} from "../controllers/project.controller";
 
 jest.mock("../models/project.model");
 
@@ -24,7 +24,7 @@ describe("fetchProjects", () => {
   });
 
   it("should throw an error if no projects are found", async () => {
-    Project.find.mockResolvedValue([]);
+    projectModel.find.mockResolvedValue([]);
     await fetchProjects(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(404);
@@ -45,7 +45,7 @@ describe("fetchProjects", () => {
       },
     ];
 
-    Project.find.mockResolvedValue(fakeProjects);
+    projectModel.find.mockResolvedValue(fakeProjects);
 
     await fetchProjects(req, res, next);
 
@@ -90,11 +90,13 @@ describe("Fetch a project by its id", () => {
   it("throws an error if project is not found", async () => {
     const req = { params: { id: "41224d776a326fb40f000001" } };
 
-    Project.findById.mockResolvedValue(null);
+    projectModel.findById.mockResolvedValue(null);
 
     await fetchProjectById(req, res, next);
 
-    expect(Project.findById).toHaveBeenCalledWith("41224d776a326fb40f000001");
+    expect(projectModel.findById).toHaveBeenCalledWith(
+      "41224d776a326fb40f000001"
+    );
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ error: "Project not found" });
   });
@@ -106,11 +108,13 @@ describe("Fetch a project by its id", () => {
       name: "Test Project",
     };
 
-    Project.findById.mockResolvedValue(fakeProject);
+    projectModel.findById.mockResolvedValue(fakeProject);
 
     await fetchProjectById(req, res, next);
 
-    expect(Project.findById).toHaveBeenCalledWith("41224d776a326fb40f000001");
+    expect(projectModel.findById).toHaveBeenCalledWith(
+      "41224d776a326fb40f000001"
+    );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       message: "Project fetched successfully",

@@ -1,7 +1,8 @@
-require("./config/env.config");
-const express = require("express");
-const { connectToDatabase } = require("./config/mongodb.config");
-const projectRouter = require("./routes/project.routes");
+import "./config/env.config.js";
+import express from "express";
+import connectToDatabase from "./config/mongodb.config.js";
+import projectRouter from "./routes/project.routes.js";
+
 const app = express();
 
 // Middlewares
