@@ -134,7 +134,7 @@ describe("create a project", () => {
     next = jest.fn();
   });
 
-  it("throws an error if a required field is missing", async () => {
+  it("throws an error if a required body field is missing", async () => {
     // Missing client name
     req.body = {
       projectName: "Test Project",
@@ -149,5 +149,27 @@ describe("create a project", () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: "All fields are required" });
+  });
+
+  it("throws an error if the request file is missing", async () => {
+    req.body = {
+      projectName: "Test Project",
+      description: "This is a test project",
+      year: 2023,
+      categories: ["category1"],
+      linkToProject: "http://example.com",
+      images: ["image1.jpg"],
+      stack: ["Node.js", "Express"],
+      clientName: "Test Client",
+    };
+
+    req.files = [];
+
+    await createProject(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "At least one image is required",
+    });
   });
 });
