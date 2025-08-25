@@ -4,6 +4,7 @@ import connectToDatabase from "./config/mongodb.config.js";
 import projectRouter from "./routes/project.routes.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import cookieParser from "cookie-parser";
+import userRouter from "./routes/user.routes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/v1/projects", projectRouter);
+app.use("/api/v1/users", userRouter);
 
 app.use(errorMiddleware);
 
